@@ -1,8 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import { MOVIES } from "./mocks/movies";
-
-const link = "https://image.tmdb.org/t/p/w500";
+import MovieCard from "./components/MovieCard";
 
 function App() {
   const [hoverId, setHoverId] = useState(0);
@@ -24,41 +23,14 @@ function App() {
         flexWrap: "wrap",
       }}
     >
-      {MOVIES.results.map((movie, _) => (
-        <div
+      {MOVIES.results.map((movie) => (
+        <MovieCard
           key={movie.id}
-          onMouseEnter={() => {
-            mouseOn(movie.id);
-          }}
-          onMouseLeave={() => {
-            mouseOff();
-          }}
-          style={{
-            position: "relative",
-            width: "300px",
-            height: "450px",
-            borderRadius: 20,
-            overflow: "hidden",
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              width: "100%",
-              height: "100%",
-              backgroundColor: movie.id === hoverId ? "black" : "transparent",
-              opacity: movie.id === hoverId ? 0.7 : 0,
-              transition: "opacity 0.3s ease",
-            }}
-          />
-          <img
-            style={{
-              width: "300px",
-              height: "450px",
-            }}
-            src={link + movie.poster_path}
-          />
-        </div>
+          movie={movie}
+          isHovered={movie.id === hoverId}
+          onMouseEnter={() => mouseOn(movie.id)}
+          onMouseLeave={mouseOff}
+        />
       ))}
     </div>
   );
