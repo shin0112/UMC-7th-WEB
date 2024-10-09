@@ -1,6 +1,11 @@
 import { useState } from "react";
 import "./App.css";
 
+import TodoButton from "./components/button/todoButton";
+import TodoInput from "./components/input/TodoInput";
+import DeleteButton from "./components/button/DeleteButton";
+import UpdateButton from "./components/button/UpdateButton";
+
 function App() {
   const [id, setId] = useState(2);
   const [editingId, setEditingId] = useState(null);
@@ -41,15 +46,12 @@ function App() {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <input
+        <TodoInput
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="값을 입력해주세요"
         />
-        <button onClick={addTodo} type="submit">
-          할 일 등록
-        </button>
+        <TodoButton onClick={addTodo} />
       </form>
 
       <div>
@@ -59,21 +61,25 @@ function App() {
             {editingId === todo.id ? (
               <div style={{ display: "flex", gap: "5px" }}>
                 <p>{todo.id}. </p>
-                <input
+                <TodoInput
                   defaultValue={todo.task}
                   onChange={(e) => setEditText(e.target.value)}
                 />
-                <button onClick={() => deleteTodo(todo.id)}>삭제하기</button>
-                <button onClick={() => updateTodo(todo.id, editText)}>
-                  수정 완료
-                </button>
+                <DeleteButton onClick={() => deleteTodo(todo.id)} />
+                <UpdateButton
+                  onClick={() => updateTodo(todo.id, editText)}
+                  buttonText="수정 완료"
+                />
               </div>
             ) : (
               <div style={{ display: "flex", gap: "5px" }}>
                 <p>{todo.id}. </p>
                 <p>{todo.task}</p>
-                <button onClick={() => deleteTodo(todo.id)}>삭제하기</button>
-                <button onClick={() => setEditingId(todo.id)}>수정 진행</button>
+                <DeleteButton onClick={() => deleteTodo(todo.id)} />
+                <UpdateButton
+                  onClick={() => setEditingId(todo.id)}
+                  buttonText="수정 진행"
+                />
               </div>
             )}
           </div>
