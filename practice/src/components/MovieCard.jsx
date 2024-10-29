@@ -1,15 +1,28 @@
+import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const link = "https://image.tmdb.org/t/p/w500";
 
+MovieCard.propTypes = {
+  movie: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    poster_path: PropTypes.string,
+    title: PropTypes.string.isRequired,
+    release_date: PropTypes.string,
+  }).isRequired,
+  isHovered: PropTypes.bool,
+  onMouseEnter: PropTypes.func,
+  onMouseLeave: PropTypes.func,
+};
+
 function MovieCard(props) {
   const navigate = useNavigate();
-  const { movie, isHovered, onMouseEnter, onMouseLeave } = props;
+  const { movie } = props;
 
   return (
     <MovieContainer>
-      <ImgContainer onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+      <ImgContainer>
         <StyledHoverImg
           onClick={() => {
             navigate(`/movies/${movie?.id}`);
@@ -27,7 +40,8 @@ function MovieCard(props) {
 }
 
 const MovieContainer = styled.div`
-  width: 10vw;
+  width: 180px;
+  height: 320px;
   display: flex;
   flex-direction: column;
   position: relative;

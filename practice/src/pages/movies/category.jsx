@@ -58,12 +58,17 @@ const CategoryBox = styled.div`
   display: flex;
   overflow: hidden;
   border-radius: 10px;
+  background-color: black;
 `;
 
 const ImgBox = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
+
+  &:hover {
+    opacity: 0.5;
+  }
 `;
 
 const Textbox = styled.div`

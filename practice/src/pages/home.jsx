@@ -1,6 +1,8 @@
+import MoviesPage from "./movies/movie";
+
 // home.jsx
 const HomePage = () => {
-  return <h1>Home Page 야호~!</h1>;
+  return <MoviesPage url={import.meta.env.VITE_POPULAR_URL} />;
 };
 
 export default HomePage;

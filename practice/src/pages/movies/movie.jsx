@@ -1,51 +1,38 @@
-import { useEffect, useState } from "react";
 import MovieCard from "@/components/MovieCard";
-import axios from "axios";
+import useCustomFetch from "@/hooks/useCustomFetch";
 import styled from "styled-components";
 
 const MoviesPage = ({ url }) => {
-  const [hoverId, setHoverId] = useState(0);
+  const { data: movies, isLoading, isError } = useCustomFetch(url);
 
-  const mouseOn = (id) => {
-    setHoverId(id);
-  };
+  if (isLoading) {
+    return (
+      <div>
+        <h1>로딩 중...</h1>
+      </div>
+    );
+  }
 
-  const mouseOff = () => {
-    setHoverId(0);
-  };
-
-  const [movies, setMovies] = useState([]);
-
-  useEffect(() => {
-    const getMovies = async () => {
-      const movies = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_MOVIE_API_TOKEN}`,
-        },
-      });
-      setMovies(movies);
-    };
-    getMovies();
-  }, []);
+  if (isError) {
+    return (
+      <div>
+        <h1>에러 </h1>
+      </div>
+    );
+  }
 
   return (
     <MovieContainer>
       {movies.data?.results.map((movie) => (
-        <MovieCard
-          key={movie.id}
-          movie={movie}
-          isHovered={movie.id === hoverId}
-          onMouseEnter={() => mouseOn(movie.id)}
-          onMouseLeave={mouseOff}
-        />
+        <MovieCard key={movie.id} movie={movie} />
       ))}
     </MovieContainer>
   );
 };
 
 const MovieContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 1vw;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
 `;
 export default MoviesPage;
