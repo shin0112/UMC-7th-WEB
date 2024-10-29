@@ -29,7 +29,7 @@ const NavBar = styled.nav`
 const Logo = styled(Link)`
   color: #ff5555;
   font-size: 30px;
-  font-weight: 300;
+  font-weight: bolder;
   text-decoration: none;
 `;
 

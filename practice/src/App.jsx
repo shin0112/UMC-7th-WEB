@@ -3,10 +3,17 @@ import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./layout/root-layout";
 import HomePage from "@/pages/home";
-import MoviesPage from "@/pages/movie";
 import LoginPage from "@/pages/login";
 import SignUpPage from "@/pages/signup";
 import SearchPage from "@/pages/search";
+import MoviesPage from "@/pages/movies/movie";
+import CategoryPage from "@/pages/movies/category";
+import MovieDetailPage from "@/pages/movies/movie-detail";
+
+const nowPlayingUrl = import.meta.env.VITE_NOW_PLAYING_URL;
+const popularUrl = import.meta.env.VITE_POPULAR_URL;
+const topRatedUrl = import.meta.env.VITE_TOP_RATED_URL;
+const upComingUrl = import.meta.env.VITE_UP_COMING_URL;
 
 const router = createBrowserRouter([
   {
@@ -16,10 +23,6 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <HomePage />,
-      },
-      {
-        path: "movies",
-        element: <MoviesPage />,
       },
       {
         path: "login",
@@ -32,6 +35,30 @@ const router = createBrowserRouter([
       {
         path: "search",
         element: <SearchPage />,
+      },
+      {
+        path: "movies",
+        element: <CategoryPage />,
+      },
+      {
+        path: "movies/:movieId",
+        element: <MovieDetailPage />,
+      },
+      {
+        path: "/movies/now-playing",
+        element: <MoviesPage url={nowPlayingUrl} />,
+      },
+      {
+        path: "/movies/popular",
+        element: <MoviesPage url={popularUrl} />,
+      },
+      {
+        path: "/movies/top-rated",
+        element: <MoviesPage url={topRatedUrl} />,
+      },
+      {
+        path: "/movies/up-coming",
+        element: <MoviesPage url={upComingUrl} />,
       },
     ],
   },

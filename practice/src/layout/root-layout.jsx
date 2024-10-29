@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "../components/navbar";
-import SideBar from "../components/sidebar";
+import Navbar from "../components/Navbar";
+import SideBar from "../components/Sidebar";
 import styled from "styled-components";
 
 const RootLayout = () => {
@@ -20,7 +20,7 @@ const RootLayout = () => {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   overflow: hidden;
 `;
 
@@ -32,11 +32,11 @@ const MainContent = styled.div`
 `;
 
 const ContentArea = styled.div`
+  display: flex;
   flex: 1;
   padding-left: 20px;
   background-color: black;
   color: white;
-  height: 100%;
   box-sizing: border-box;
 `;
 
