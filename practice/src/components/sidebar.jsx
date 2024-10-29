@@ -30,6 +30,7 @@ const Nav = styled.nav`
 
 const SideBarLink = styled(Link)`
   display: flex;
+  width: 70px;
   align-items: center;
   gap: 8px;
   color: white;

@@ -1,25 +1,13 @@
+import Error from "@/components/Error";
+import Loading from "@/components/Loading";
 import MovieCard from "@/components/MovieCard";
 import useCustomFetch from "@/hooks/useCustomFetch";
 import styled from "styled-components";
 
 const MoviesPage = ({ url }) => {
   const { data: movies, isLoading, isError } = useCustomFetch(url);
-
-  if (isLoading) {
-    return (
-      <div>
-        <h1>로딩 중...</h1>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div>
-        <h1>에러 </h1>
-      </div>
-    );
-  }
+  <Loading isLoading={isLoading} />;
+  <Error isError={isError} />;
 
   return (
     <MovieContainer>

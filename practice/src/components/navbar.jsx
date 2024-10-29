@@ -27,7 +27,7 @@ const NavBar = styled.nav`
 `;
 
 const Logo = styled(Link)`
-  color: #ff5555;
+  color: #ff0066;
   font-size: 30px;
   font-weight: bolder;
   text-decoration: none;
@@ -51,7 +51,7 @@ const LoginButton = styled.button`
 
 const SignUpButton = styled.button`
   color: white;
-  background-color: #ff5555;
+  background-color: #ff0066;
   border-radius: 10px;
   width: 70px;
   height: 30px;
