@@ -2,8 +2,8 @@ import Error from "@/components/Error";
 import Loading from "@/components/Loading";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import useCustomFetch from "../../hooks/useCustomFetch";
 import CreditInfo from "../../components/CreditInfo";
+import useCustomFetch from "../../hooks/useCustomFetch";
 
 const link = "https://image.tmdb.org/t/p/w500";
 
@@ -23,7 +23,7 @@ const MovieDetailPage = () => {
   } = useCustomFetch(`${params.movieId}/credits?language=ko-KR`);
 
   if (movieLoading || creditsLoading) {
-    return <Loading isLoading={true} />;
+    return <Loading />;
   }
 
   if (movieError || creditsError) {
@@ -67,7 +67,9 @@ const MovieDetailPage = () => {
 const MovieInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  background-size: contain;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom;
 `;
 
 const Title = styled.div`

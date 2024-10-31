@@ -6,8 +6,11 @@ import styled from "styled-components";
 
 const MoviesPage = ({ url }) => {
   const { data: movies, isLoading, isError } = useCustomFetch(url);
-  <Loading isLoading={isLoading} />;
-  <Error isError={isError} />;
+
+  if (isLoading) return <Loading />;
+  if (isError) return <Error />;
+
+  console.log(url);
 
   return (
     <MovieContainer>

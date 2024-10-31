@@ -1,20 +1,8 @@
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import PropTypes from "prop-types";
 
-AuthForm.propTypes = {
-  schema: PropTypes.object.isRequired,
-  title: PropTypes.string.isRequired,
-  fields: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string,
-      placeholder: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-};
-
+// Define AuthForm before using it in SignUp and Login
 const AuthForm = (props) => {
   const { schema, title, fields } = props;
 
@@ -52,11 +40,7 @@ const AuthForm = (props) => {
   );
 };
 
-SignUp.propTypes = {
-  schema: PropTypes.object.isRequired,
-  title: PropTypes.string.isRequired,
-};
-
+// Use AuthForm in SignUp and Login components after it's defined
 const SignUp = (props) => {
   const { schema, title } = props;
 
@@ -81,11 +65,6 @@ const SignUp = (props) => {
   );
 };
 
-Login.propTypes = {
-  schema: PropTypes.object.isRequired,
-  title: PropTypes.string.isRequired,
-};
-
 const Login = (props) => {
   const { schema, title } = props;
 
@@ -105,6 +84,7 @@ const Login = (props) => {
   );
 };
 
+// Styled components
 const Container = styled.div`
   flex: auto;
   justify-items: center;
@@ -141,4 +121,4 @@ const InputSubmit = styled.input`
   padding: 20px;
 `;
 
-export { SignUp, Login };
+export { Login, SignUp };
