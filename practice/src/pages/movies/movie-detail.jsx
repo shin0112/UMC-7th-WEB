@@ -14,13 +14,13 @@ const MovieDetailPage = () => {
     data: movie,
     isLoading: movieLoading,
     isError: movieError,
-  } = useMovieFetch(`${params.movieId}?language=ko-KR`);
+  } = useMovieFetch(`movie/${params.movieId}?language=ko-KR`);
 
   const {
     data: credits,
     isLoading: creditsLoading,
     isError: creditsError,
-  } = useMovieFetch(`${params.movieId}/credits?language=ko-KR`);
+  } = useMovieFetch(`movie/${params.movieId}/credits?language=ko-KR`);
 
   if (movieLoading || creditsLoading) {
     return <Loading />;
