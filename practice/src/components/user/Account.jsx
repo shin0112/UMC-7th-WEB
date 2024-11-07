@@ -1,10 +1,16 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { localAxiosInstance } from "../../apis/axios-instance";
+import { LoginContext } from "../../context/LoginContext";
 
 // Define AuthForm before using it in SignUp and Login
 const AuthForm = (props) => {
-  const { schema, title, fields } = props;
+  const { link, url, schema, title, fields } = props;
+  const { setIsLogin, saveToken, getAccessToken } = useContext(LoginContext);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -15,9 +21,17 @@ const AuthForm = (props) => {
     mode: "onChange",
   });
 
-  const onSubmit = (data) => {
-    console.log("폼 데이터 제출");
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      const res = await localAxiosInstance.post(url, data);
+
+      saveToken(res.data);
+      if (getAccessToken) setIsLogin(true);
+
+      navigate(`/${link}`);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -31,7 +45,7 @@ const AuthForm = (props) => {
               placeholder={field.placeholder}
               {...register(field.name)}
             />
-            <p style={{ color: "red" }}>{errors[field.name]?.message}</p>
+            <ErrorMessage>{errors[field.name]?.message}</ErrorMessage>
           </div>
         ))}
         <InputSubmit type="submit" />
@@ -46,6 +60,8 @@ const SignUp = (props) => {
 
   return (
     <AuthForm
+      link={"login"}
+      url={"auth/register"}
       schema={schema}
       title={title}
       fields={[
@@ -70,6 +86,8 @@ const Login = (props) => {
 
   return (
     <AuthForm
+      link={""}
+      url={"auth/login"}
       schema={schema}
       title={title}
       fields={[
@@ -119,6 +137,11 @@ const InputSubmit = styled.input`
   font-weight: bold;
   color: white;
   padding: 20px;
+`;
+
+const ErrorMessage = styled.p`
+  height: 20px;
+  color: red;
 `;
 
 export { Login, SignUp };

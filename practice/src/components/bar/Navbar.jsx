@@ -1,17 +1,37 @@
+import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { LoginContext } from "@/context/LoginContext";
+import { UserEmail } from "../user/UserInfo";
 
 const Navbar = () => {
   const navigate = useNavigate(); // useNavigate 훅 사용
+  const { isLogin, logout } = useContext(LoginContext);
 
   return (
     <NavBar>
       <Logo to="/">YONGCHA</Logo>
       <ButtonContainer>
-        <LoginButton onClick={() => navigate("/login")}>로그인</LoginButton>
-        <SignUpButton onClick={() => navigate("/signup")}>
-          회원가입
-        </SignUpButton>
+        {isLogin ? (
+          <>
+            <UserEmail />
+            <LogoutButton
+              onClick={() => {
+                logout();
+                navigate("/login");
+              }}
+            >
+              로그아웃
+            </LogoutButton>
+          </>
+        ) : (
+          <>
+            <LoginButton onClick={() => navigate("/login")}>로그인</LoginButton>
+            <SignUpButton onClick={() => navigate("/signup")}>
+              회원가입
+            </SignUpButton>
+          </>
+        )}
       </ButtonContainer>
     </NavBar>
   );
@@ -52,6 +72,17 @@ const LoginButton = styled.button`
 const SignUpButton = styled.button`
   color: white;
   background-color: #ff0066;
+  border-radius: 10px;
+  width: 70px;
+  height: 30px;
+  &:hover {
+    opacity: 0.5;
+  }
+`;
+
+const LogoutButton = styled.button`
+  color: white;
+  background-color: gray;
   border-radius: 10px;
   width: 70px;
   height: 30px;

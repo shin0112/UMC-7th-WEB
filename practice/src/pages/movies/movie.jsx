@@ -1,11 +1,11 @@
 import Error from "@/components/Error";
 import Loading from "@/components/Loading";
-import MovieCard from "@/components/MovieCard";
-import useCustomFetch from "@/hooks/useCustomFetch";
+import MovieCard from "@/components/movie/MovieCard";
+import useMovieFetch from "@/hooks/useMovieFetch";
 import styled from "styled-components";
 
 const MoviesPage = ({ url }) => {
-  const { data: movies, isLoading, isError } = useCustomFetch(url);
+  const { data: movies, isLoading, isError } = useMovieFetch(url);
 
   if (isLoading) return <Loading />;
   if (isError) return <Error />;

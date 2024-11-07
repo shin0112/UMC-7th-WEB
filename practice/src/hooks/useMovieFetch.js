@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { localAxiosInstance } from "../apis/axios-instance";
+import { axiosInstance } from "../apis/axios-instance";
 
 // const { data, isLoading, isError } = useCustomFetch('url');
 
-const useCustomFetch = (url) => {
+const useMovieFetch = (url) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -12,7 +12,7 @@ const useCustomFetch = (url) => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await localAxiosInstance.get(url);
+        const response = await axiosInstance.get(url);
         setData(response);
       } catch (error) {
         console.log(error);
@@ -27,4 +27,4 @@ const useCustomFetch = (url) => {
   return { data, isLoading, isError };
 };
 
-export default useCustomFetch;
+export default useMovieFetch;
