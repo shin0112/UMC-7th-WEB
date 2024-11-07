@@ -5,6 +5,7 @@ import MovieCard from "../components/movies/MovieCard";
 
 const SearchPage = () => {
   const [search, setSearch] = useState("");
+  const [isSearch, setIsSearch] = useState(false);
   const [movies, setMovies] = useState({});
 
   const handleSearch = async () => {
@@ -13,6 +14,7 @@ const SearchPage = () => {
     );
     console.log(response);
     setMovies(response);
+    setIsSearch(true);
   };
 
   return (
@@ -31,12 +33,16 @@ const SearchPage = () => {
           검색
         </SearchButton>
       </SearchBarContainer>
-      {movies && (
+      {movies.data?.results[0] ? (
         <MovieContainer>
           {movies.data?.results.map((movie) => (
             <MovieCard key={movie.id} movie={movie} />
           ))}
         </MovieContainer>
+      ) : (
+        isSearch && (
+          <Text>{`해당하는 검색어 ${search}에 \n해당하는 데이터가 없습니다.`}</Text>
+        )
       )}
     </Container>
   );
@@ -54,6 +60,7 @@ const SearchBarContainer = styled.div`
   flex: 1;
   align-items: center;
   justify-content: center;
+  margin-bottom: 15px;
 `;
 
 const SearchInput = styled.input`
@@ -85,8 +92,12 @@ const SearchButton = styled.button`
 const MovieContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-top: 15px;
   gap: 15px;
+`;
+
+const Text = styled.div`
+  color: white;
+  font-size: 30px;
 `;
 
 export default SearchPage;
