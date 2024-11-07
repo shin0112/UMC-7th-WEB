@@ -15,7 +15,14 @@ const Navbar = () => {
         {isLogin ? (
           <>
             <UserEmail />
-            <LogoutButton onClick={() => logout()}>로그아웃</LogoutButton>
+            <LogoutButton
+              onClick={() => {
+                logout();
+                navigate("/login");
+              }}
+            >
+              로그아웃
+            </LogoutButton>
           </>
         ) : (
           <>
