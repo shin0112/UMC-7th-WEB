@@ -7,4 +7,11 @@ const axiosInstance = axios.create({
   baseURL: "https://api.themoviedb.org/3/movie/",
 });
 
-export { axiosInstance };
+const localAxiosInstance = axios.create({
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  },
+  baseURL: "http://localhost:3000/",
+});
+
+export { axiosInstance, localAxiosInstance };

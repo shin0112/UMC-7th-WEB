@@ -1,6 +1,6 @@
+import Navbar from "@/components/bar/Navbar";
+import SideBar from "@/components/bar/Sidebar";
 import { Outlet } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import SideBar from "../components/Sidebar";
 import styled from "styled-components";
 
 const RootLayout = () => {

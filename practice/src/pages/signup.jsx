@@ -1,4 +1,4 @@
-import { SignUp } from "../components/Account";
+import { SignUp } from "@/components/user/Account";
 import { validateSignUp } from "../utils/validate";
 
 const SignUpPage = () => {

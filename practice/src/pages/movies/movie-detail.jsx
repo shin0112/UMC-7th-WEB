@@ -1,9 +1,9 @@
 import Error from "@/components/Error";
 import Loading from "@/components/Loading";
+import CreditInfo from "@/components/movie/CreditInfo";
+import useMovieFetch from "@/hooks/useMovieFetch";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import CreditInfo from "../../components/CreditInfo";
-import useCustomFetch from "../../hooks/useCustomFetch";
 
 const link = "https://image.tmdb.org/t/p/w500";
 
@@ -14,13 +14,13 @@ const MovieDetailPage = () => {
     data: movie,
     isLoading: movieLoading,
     isError: movieError,
-  } = useCustomFetch(`${params.movieId}?language=ko-KR`);
+  } = useMovieFetch(`${params.movieId}?language=ko-KR`);
 
   const {
     data: credits,
     isLoading: creditsLoading,
     isError: creditsError,
-  } = useCustomFetch(`${params.movieId}/credits?language=ko-KR`);
+  } = useMovieFetch(`${params.movieId}/credits?language=ko-KR`);
 
   if (movieLoading || creditsLoading) {
     return <Loading />;
