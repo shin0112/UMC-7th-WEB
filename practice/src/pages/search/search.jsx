@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { axiosInstance } from "../../apis/axios-instance";
-import MovieCard from "../../components/movies/MovieCard";
 import * as S from "./search.style";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { SearchMovieCardContainer } from "../../components/movies/MovieCardContainer";

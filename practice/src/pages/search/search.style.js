@@ -8,6 +8,7 @@ export const Container = styled.div`
 export const SearchBarContainer = styled.div`
   display: flex;
   justify-content: center;
+  margin-bottom: 20px;
 
   input {
     flex: 1;
