@@ -34,7 +34,7 @@ const MainContent = styled.div`
 const ContentArea = styled.div`
   display: flex;
   flex: 1;
-  padding-left: 20px;
+  padding: 20px;
   background-color: black;
   color: white;
   box-sizing: border-box;

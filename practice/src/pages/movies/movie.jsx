@@ -1,6 +1,6 @@
 import Error from "@/components/Error";
 import Loading from "@/components/Loading";
-import MovieCard from "@/components/movie/MovieCard";
+import MovieCard from "@/components/movies/MovieCard";
 import useMovieFetch from "@/hooks/useMovieFetch";
 import styled from "styled-components";
 

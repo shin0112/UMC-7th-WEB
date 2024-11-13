@@ -5,7 +5,7 @@ import RootLayout from "./layout/root-layout";
 import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
 import SignUpPage from "@/pages/signup";
-import SearchPage from "@/pages/search";
+import SearchPage from "@/pages/search/search";
 import MoviesPage from "@/pages/movies/movie";
 import CategoryPage from "@/pages/movies/category";
 import MovieDetailPage from "@/pages/movies/movie-detail";

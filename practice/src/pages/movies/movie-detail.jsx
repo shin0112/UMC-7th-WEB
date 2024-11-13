@@ -1,6 +1,6 @@
 import Error from "@/components/Error";
 import Loading from "@/components/Loading";
-import CreditInfo from "@/components/movie/CreditInfo";
+import CreditInfo from "@/components/movies/CreditInfo";
 import useMovieFetch from "@/hooks/useMovieFetch";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
