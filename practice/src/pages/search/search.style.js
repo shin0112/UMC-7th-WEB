@@ -39,6 +39,8 @@ export const MovieContainer = styled.div`
 `;
 
 export const Text = styled.div`
+  text-align: center;
   color: white;
   font-size: 30px;
+  margin-top: 20px;
 `;

@@ -2,48 +2,44 @@ import { useState } from "react";
 import { axiosInstance } from "../../apis/axios-instance";
 import MovieCard from "../../components/movies/MovieCard";
 import * as S from "./search.style";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { SearchMovieCardContainer } from "../../components/movies/MovieCardContainer";
 
 const SearchPage = () => {
-  const [search, setSearch] = useState("");
-  const [isSearch, setIsSearch] = useState(false);
-  const [movies, setMovies] = useState({});
+  const navigate = useNavigate();
 
-  const handleSearch = async () => {
-    const response = await axiosInstance.get(
-      `/search/movie?query=${search}&language=ko-KR`
-    );
-    console.log(response);
-    setMovies(response);
-    setIsSearch(true);
+  const [searchValue, setSearchValue] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams({
+    mq: "",
+  });
+  const mq = searchParams.get("mq");
+
+  const handleSearchMovie = async () => {
+    if (mq === searchValue) return;
+
+    navigate(`/search?mq=${searchValue}`);
   };
 
   return (
     <S.Container>
       <S.SearchBarContainer>
         <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleSearchMovie();
+          }}
           placeholder="영화 제목을 입력해주세요."
         />
         <button
           onClick={() => {
-            handleSearch();
+            handleSearchMovie();
           }}
         >
           검색
         </button>
       </S.SearchBarContainer>
-      {movies.data?.results[0] ? (
-        <S.MovieContainer>
-          {movies.data?.results.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
-          ))}
-        </S.MovieContainer>
-      ) : (
-        isSearch && (
-          <S.Text>{`해당하는 검색어 ${search}에 \n해당하는 데이터가 없습니다.`}</S.Text>
-        )
-      )}
+      <SearchMovieCardContainer />
     </S.Container>
   );
 };

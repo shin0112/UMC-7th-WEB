@@ -1,8 +1,7 @@
 import Error from "@/components/Error";
 import Loading from "@/components/Loading";
-import MovieCard from "@/components/movies/MovieCard";
 import useMovieFetch from "@/hooks/useMovieFetch";
-import styled from "styled-components";
+import { MovieContainer } from "../../components/movies/MovieCardContainer";
 
 const MoviesPage = ({ url }) => {
   const { data: movies, isLoading, isError } = useMovieFetch(url);
@@ -12,18 +11,7 @@ const MoviesPage = ({ url }) => {
 
   console.log(url);
 
-  return (
-    <MovieContainer>
-      {movies.data?.results.map((movie) => (
-        <MovieCard key={movie.id} movie={movie} />
-      ))}
-    </MovieContainer>
-  );
+  return <MovieContainer movies={movies} />;
 };
 
-const MovieContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-`;
 export default MoviesPage;
