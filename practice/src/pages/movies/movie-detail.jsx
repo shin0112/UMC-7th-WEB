@@ -1,6 +1,6 @@
 import Error from "@/components/Error";
 import Loading from "@/components/Loading";
-import CreditInfo from "@/components/movie/CreditInfo";
+import CreditInfo from "@/components/movies/CreditInfo";
 import useMovieFetch from "@/hooks/useMovieFetch";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -14,13 +14,13 @@ const MovieDetailPage = () => {
     data: movie,
     isLoading: movieLoading,
     isError: movieError,
-  } = useMovieFetch(`${params.movieId}?language=ko-KR`);
+  } = useMovieFetch(`movie/${params.movieId}?language=ko-KR`);
 
   const {
     data: credits,
     isLoading: creditsLoading,
     isError: creditsError,
-  } = useMovieFetch(`${params.movieId}/credits?language=ko-KR`);
+  } = useMovieFetch(`movie/${params.movieId}/credits?language=ko-KR`);
 
   if (movieLoading || creditsLoading) {
     return <Loading />;

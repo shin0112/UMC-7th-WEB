@@ -5,15 +5,15 @@ import RootLayout from "./layout/root-layout";
 import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
 import SignUpPage from "@/pages/signup";
-import SearchPage from "@/pages/search";
+import SearchPage from "@/pages/search/search";
 import MoviesPage from "@/pages/movies/movie";
 import CategoryPage from "@/pages/movies/category";
 import MovieDetailPage from "@/pages/movies/movie-detail";
 
-const nowPlayingUrl = import.meta.env.VITE_NOW_PLAYING_URL;
-const popularUrl = import.meta.env.VITE_POPULAR_URL;
-const topRatedUrl = import.meta.env.VITE_TOP_RATED_URL;
-const upComingUrl = import.meta.env.VITE_UP_COMING_URL;
+const nowPlayingUrl = `movie/${import.meta.env.VITE_NOW_PLAYING_URL}`;
+const popularUrl = `movie/${import.meta.env.VITE_POPULAR_URL}`;
+const topRatedUrl = `movie/${import.meta.env.VITE_TOP_RATED_URL}`;
+const upComingUrl = `movie/${import.meta.env.VITE_UP_COMING_URL}`;
 
 const router = createBrowserRouter([
   {

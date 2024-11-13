@@ -1,29 +1,17 @@
 import Error from "@/components/Error";
-import Loading from "@/components/Loading";
-import MovieCard from "@/components/movie/MovieCard";
 import useMovieFetch from "@/hooks/useMovieFetch";
-import styled from "styled-components";
+import { MovieContainer } from "../../components/movies/MovieCardContainer";
+import SkeletonCardList from "../../components/card/SkeletonList";
 
 const MoviesPage = ({ url }) => {
   const { data: movies, isLoading, isError } = useMovieFetch(url);
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <SkeletonCardList number={20} />;
   if (isError) return <Error />;
 
   console.log(url);
 
-  return (
-    <MovieContainer>
-      {movies.data?.results.map((movie) => (
-        <MovieCard key={movie.id} movie={movie} />
-      ))}
-    </MovieContainer>
-  );
+  return <MovieContainer movies={movies} />;
 };
 
-const MovieContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-`;
 export default MoviesPage;
