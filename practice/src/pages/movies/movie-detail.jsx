@@ -1,9 +1,14 @@
 import Error from "@/components/Error";
 import Loading from "@/components/Loading";
-import CreditInfo from "@/components/movies/CreditInfo";
-import useMovieFetch from "@/hooks/useMovieFetch";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+
+import { useQuery } from "@tanstack/react-query";
+import CreditInfo from "../../components/movies/CreditInfo.jsx";
+import {
+  useGetCredits,
+  useGetMovieDetails
+} from "../../hooks/queries/movie/useGetMovies.js";
 
 const link = "https://image.tmdb.org/t/p/w500";
 
@@ -12,17 +17,27 @@ const MovieDetailPage = () => {
 
   const {
     data: movie,
-    isLoading: movieLoading,
+    isPending: moviePending,
     isError: movieError,
-  } = useMovieFetch(`movie/${params.movieId}?language=ko-KR`);
+  } = useQuery({
+    queryFn: () => useGetMovieDetails({ movieId: params.movieId }),
+    queryKey: ['movies', 'detail'],
+    cacheTime: 10000,
+    staleTime: 10000,
+  });
 
   const {
     data: credits,
-    isLoading: creditsLoading,
+    isPending: creditsPending,
     isError: creditsError,
-  } = useMovieFetch(`movie/${params.movieId}/credits?language=ko-KR`);
+  } = useQuery({
+    queryFn: () => useGetCredits({ movieId: params.movieId }),
+    queryKey: ['credit'],
+    cacheTime: 10000,
+    staleTime: 10000,
+  });
 
-  if (movieLoading || creditsLoading) {
+  if (moviePending || creditsPending) {
     return <Loading />;
   }
 
@@ -30,7 +45,7 @@ const MovieDetailPage = () => {
     return <Error isError={true} />;
   }
 
-  if (!movie?.data || !credits?.data) {
+  if (!movie || !credits) {
     return null;
   }
 
@@ -38,25 +53,25 @@ const MovieDetailPage = () => {
   return (
     <div>
       <MovieInfoContainer
-        style={{ backgroundImage: `url(${link}${movie.data.backdrop_path})` }}
+        style={{ backgroundImage: `url(${link}${movie.backdrop_path})` }}
       >
         <MovieDetailInfoContainer>
-          <Title>{movie.data.title}</Title>
+          <Title>{movie.title}</Title>
           <MovieDetailInfo>
-            평균 {Math.round(movie.data.vote_average * 100) / 100}
+            평균 {Math.round(movie.vote_average * 100) / 100}
           </MovieDetailInfo>
           <MovieDetailInfo>
-            {movie.data.release_date.slice(0, 4)}
+            {movie.release_date.slice(0, 4)}
           </MovieDetailInfo>
-          <MovieDetailInfo>{movie.data.runtime}분</MovieDetailInfo>
-          <TagLine>{movie.data.tagline}</TagLine>
-          <MovieDetailInfo>{movie.data.overview}</MovieDetailInfo>
+          <MovieDetailInfo>{movie.runtime}분</MovieDetailInfo>
+          <TagLine>{movie.tagline}</TagLine>
+          <MovieDetailInfo>{movie.overview}</MovieDetailInfo>
         </MovieDetailInfoContainer>
       </MovieInfoContainer>
 
       <Title>감독/출연</Title>
       <CreditsContainer>
-        {credits.data.cast.map((credit) => (
+        {credits.cast.map((credit) => (
           <CreditInfo key={credit.id} credit={credit} />
         ))}
       </CreditsContainer>

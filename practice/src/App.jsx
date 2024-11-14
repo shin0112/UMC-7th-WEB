@@ -1,19 +1,15 @@
-import "./App.css";
-
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import RootLayout from "./layout/root-layout";
 import HomePage from "@/pages/home";
 import LoginPage from "@/pages/login";
-import SignUpPage from "@/pages/signup";
-import SearchPage from "@/pages/search/search";
-import MoviesPage from "@/pages/movies/movie";
 import CategoryPage from "@/pages/movies/category";
+import MoviesPage from "@/pages/movies/movie";
 import MovieDetailPage from "@/pages/movies/movie-detail";
-
-const nowPlayingUrl = `movie/${import.meta.env.VITE_NOW_PLAYING_URL}`;
-const popularUrl = `movie/${import.meta.env.VITE_POPULAR_URL}`;
-const topRatedUrl = `movie/${import.meta.env.VITE_TOP_RATED_URL}`;
-const upComingUrl = `movie/${import.meta.env.VITE_UP_COMING_URL}`;
+import SearchPage from "@/pages/search/search";
+import SignUpPage from "@/pages/signup";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./App.css";
+import RootLayout from "./layout/root-layout";
 
 const router = createBrowserRouter([
   {
@@ -46,26 +42,32 @@ const router = createBrowserRouter([
       },
       {
         path: "/movies/now-playing",
-        element: <MoviesPage url={nowPlayingUrl} />,
+        element: <MoviesPage category={"now_playing"}/>,
       },
       {
         path: "/movies/popular",
-        element: <MoviesPage url={popularUrl} />,
+        element: <MoviesPage category={"popular"}/>,
       },
       {
         path: "/movies/top-rated",
-        element: <MoviesPage url={topRatedUrl} />,
+        element: <MoviesPage category={"top_rated"}/>,
       },
       {
         path: "/movies/up-coming",
-        element: <MoviesPage url={upComingUrl} />,
+        element: <MoviesPage category={"upcoming"}/>,
       },
     ],
   },
 ]);
 
+const queryClient = new QueryClient();
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router}/>;
+      <ReactQueryDevtools initialIsOpen={false}/>
+    </QueryClientProvider>
+  );
 }
 
 export default App;

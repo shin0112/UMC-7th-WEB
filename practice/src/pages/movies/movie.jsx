@@ -1,15 +1,28 @@
 import Error from "@/components/Error";
-import useMovieFetch from "@/hooks/useMovieFetch";
-import { MovieContainer } from "../../components/movies/MovieCardContainer";
+import { useQuery } from "@tanstack/react-query";
 import SkeletonCardList from "../../components/card/SkeletonList";
+import { MovieContainer } from "../../components/movies/MovieCardContainer";
+import { useGetMovies } from "../../hooks/queries/movie/useGetMovies.js";
 
-const MoviesPage = ({ url }) => {
-  const { data: movies, isLoading, isError } = useMovieFetch(url);
+const MoviesPage = ({ category }) => {
+  const {
+    data: movies,
+    isPending,
+    isError,
+  } = useQuery({
+    queryFn: () => useGetMovies({ category: category, pageParam: 1 }),
+    queryKey: ["movies", category],
+    cacheTime: 10000,
+    staleTime: 10000,
+  });
 
-  if (isLoading) return <SkeletonCardList number={20} />;
+  // const {data} = useGetInfiniteMovies(category);
+  // console.log(data);
+
+  if (isPending) {
+    return <SkeletonCardList number={20}/>;
+  }
   if (isError) return <Error />;
-
-  console.log(url);
 
   return <MovieContainer movies={movies} />;
 };
