@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import SkeletonCardList from "../../components/card/SkeletonList";
 import { MovieContainer } from "../../components/movies/MovieCardContainer";
 import { useGetMovies } from "../../hooks/queries/movie/useGetMovies.js";
+import useGetInfiniteMovies
+  from "../../hooks/queries/movie/useGetInfiniteMovies.js";
 
 const MoviesPage = ({ category }) => {
   const {
@@ -12,11 +14,12 @@ const MoviesPage = ({ category }) => {
   } = useQuery({
     queryFn: () => useGetMovies({ category: category, pageParam: 1 }),
     queryKey: ["movies", category],
+    keepPreviousData: true,
     cacheTime: 10000,
     staleTime: 10000,
   });
 
-  // const {data} = useGetInfiniteMovies(category);
+  // const { data } = useGetInfiniteMovies(category);
   // console.log(data);
 
   if (isPending) {
@@ -24,7 +27,7 @@ const MoviesPage = ({ category }) => {
   }
   if (isError) return <Error />;
 
-  return <MovieContainer movies={movies} />;
+  return <MovieContainer movies={movies}/>;
 };
 
 export default MoviesPage;
