@@ -43,8 +43,7 @@ const AuthForm = (props) => {
     if (url === "회원가입") {
       signUpMutation({
         email: data.email,
-        password: data.password,
-        passwordCheck: data.passwordCheck
+        password: data.password
       })
     } else {
       loginMutation({

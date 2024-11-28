@@ -5,88 +5,213 @@ import TodoButton from "./components/button/todoButton";
 import TodoInput from "./components/input/TodoInput";
 import DeleteButton from "./components/button/DeleteButton";
 import UpdateButton from "./components/button/UpdateButton";
+import styled from "styled-components";
+import { deleteTodo, getTodoList, patchTodo, postTodo } from "./apis/todo.js";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { queryClient } from "./main.jsx";
 
 function App() {
-  const [id, setId] = useState(2);
   const [editingId, setEditingId] = useState(null);
-  const [text, setText] = useState("");
-  const [editText, setEditText] = useState("");
+  const [title, setTitle] = useState("")
+  const [content, setContent] = useState("");
+  const [search, setSearch] = useState("");
+  const [editTitle, setEditTitle] = useState("")
+  const [editContent, setEditContent] = useState("");
 
-  const [todos, setTodos] = useState([
-    { id: 1, task: "투두 만들어보기" },
-    { id: 2, task: "희연, 혜연, 천민" },
-  ]);
+  const { data: todos, isPending } = useQuery({
+    queryFn: () => getTodoList({ search }),
+    queryKey: ["todos", search],
+  })
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
+  const { mutate: postTodoMutation } = useMutation(({
+    mutationFn: postTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["todos"]
+      })
+    },
+  }))
+
+  const { mutate: deleteTodoMutation } = useMutation({
+    mutationFn: deleteTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["todos"]
+      })
+    },
+  })
+
+  const { mutate: patchTodoMutation } = useMutation({
+    mutationFn: patchTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["todos"]
+      })
+    }
+  })
 
   const addTodo = () => {
-    setTodos((prev) => [...prev, { id: id + 1, task: text }]);
-    setId(id + 1);
-    setText("");
+    if (title === "" || content === "") {
+      return;
+    }
+
+    postTodoMutation({ title, content });
+
+    setTitle("");
+    setContent("");
   };
 
-  const deleteTodo = (id) => {
-    setTodos((prev) => prev.filter((item) => item.id !== id));
-  };
+  const updateTodo = (id, title, content) => {
+    if (editTitle === "" && editContent === "") {
+      setEditingId(null);
+      return;
+    }
 
-  const deleteTodoList = () => {
-    setTodos([]);
-  };
+    patchTodoMutation({
+      id,
+      title: editTitle ? editTitle : title,
+      content: editContent ? editContent : content
+    });
 
-  const updateTodo = (id, text) => {
-    setTodos((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, task: text } : item))
-    );
+    setEditTitle("");
+    setEditContent("");
     setEditingId(null);
-    setEditText("");
-  };
+  }
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
+    <Container>
+      <h1>ToDo 검색</h1>
+      <TodoInput
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
+      <TodoInputContainer>
         <TodoInput
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="제목을 입력해주세요"
+        />
+        <TodoInput
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          placeholder="내용을 입력해주세요"
         />
         <TodoButton onClick={addTodo} />
-      </form>
+      </TodoInputContainer>
 
-      <div>
-        <button onClick={deleteTodoList}>전체 삭제하기</button>
-        {todos.map((todo) => (
-          <div key={todo.id} style={{ display: "flex", gap: "20px" }}>
+      <TodoListContainer>
+        {isPending ? (
+          <div>로딩중...</div>
+        ) : (
+          todos[0]?.map((todo) => (
+          <div key={todo.id}>
             {editingId === todo.id ? (
-              <div style={{ display: "flex", gap: "5px" }}>
-                <p>{todo.id}. </p>
-                <TodoInput
-                  defaultValue={todo.task}
-                  onChange={(e) => setEditText(e.target.value)}
-                />
-                <DeleteButton onClick={() => deleteTodo(todo.id)} />
-                <UpdateButton
-                  onClick={() => updateTodo(todo.id, editText)}
-                  buttonText="수정 완료"
-                />
-              </div>
+              <TodoContainer>
+                <input type="checkbox" defaultChecked={todo.checked}/>
+                <TextContainer>
+                  <TodoInput
+                    defaultValue={todo.title}
+                    onChange={(e) => setEditTitle(e.target.value)}
+                  />
+                  <TodoInput
+                    defaultValue={todo.content}
+                    onChange={(e) => setEditContent(e.target.value)}
+                  />
+                </TextContainer>
+                <ButtonContainer>
+                  <UpdateButton
+                    onClick={() => updateTodo(
+                      todo.id,
+                      todo.title,
+                      todo.content
+                    )}
+                    buttonText="수정 완료"
+                  />
+                </ButtonContainer>
+              </TodoContainer>
             ) : (
-              <div style={{ display: "flex", gap: "5px" }}>
-                <p>{todo.id}. </p>
-                <p>{todo.task}</p>
-                <DeleteButton onClick={() => deleteTodo(todo.id)} />
-                <UpdateButton
-                  onClick={() => setEditingId(todo.id)}
-                  buttonText="수정 진행"
+              <TodoContainer>
+                <input
+                  type="checkbox"
+                  defaultChecked={todo.checked}
+                  onChange={(e) => patchTodoMutation({
+                    id: todo.id,
+                    checked: !todo.checked
+                  })}
                 />
-              </div>
+                <TextContainer>
+                  <Title>{todo.title}</Title>
+                  <Content>{todo.content}</Content>
+                </TextContainer>
+                <ButtonContainer>
+                  <UpdateButton
+                    onClick={() => setEditingId(todo.id)}
+                    buttonText="수정"
+                  />
+                  <DeleteButton
+                    onClick={() => deleteTodoMutation({ id: todo.id })}
+                  />
+                </ButtonContainer>
+              </TodoContainer>
             )}
           </div>
-        ))}
-      </div>
-    </>
+          )))}
+      </TodoListContainer>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+`;
+
+const TodoInputContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  width: 80%;
+`
+
+const TodoListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 80%;
+`
+
+const TodoContainer = styled.div`
+  border: 1px solid #AAAAAA;
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  gap: 10px;
+`
+
+const TextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 70%;
+`
+
+const Title = styled.div`
+  font-weight: bold;
+`
+
+const Content = styled.div`
+
+`
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  gap: 10px;
+  width: 30%;
+`
 
 export default App;
