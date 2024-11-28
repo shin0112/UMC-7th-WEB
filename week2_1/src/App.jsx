@@ -6,57 +6,86 @@ import TodoInput from "./components/input/TodoInput";
 import DeleteButton from "./components/button/DeleteButton";
 import UpdateButton from "./components/button/UpdateButton";
 import styled from "styled-components";
+import { deleteTodo, getTodoList, patchTodo, postTodo } from "./apis/todo.js";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { queryClient } from "./main.jsx";
 
 function App() {
-  const [id, setId] = useState(2);
   const [editingId, setEditingId] = useState(null);
   const [title, setTitle] = useState("")
+  const [content, setContent] = useState("");
+  const [search, setSearch] = useState("");
   const [editTitle, setEditTitle] = useState("")
-  const [text, setText] = useState("");
-  const [editText, setEditText] = useState("");
+  const [editContent, setEditContent] = useState("");
 
-  const [todos, setTodos] = useState([
-    { id: 1, title: "투두", task: "투두 만들어보기" },
-    { id: 2, title: "희연", task: "희연, 혜연, 천민" },
-  ]);
+  const { data: todos, isPending } = useQuery({
+    queryFn: () => getTodoList({ search }),
+    queryKey: ["todos", search],
+  })
+
+  const { mutate: postTodoMutation } = useMutation(({
+    mutationFn: postTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["todos"]
+      })
+    },
+  }))
+
+  const { mutate: deleteTodoMutation } = useMutation({
+    mutationFn: deleteTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["todos"]
+      })
+    },
+  })
+
+  const { mutate: patchTodoMutation } = useMutation({
+    mutationFn: patchTodo,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["todos"]
+      })
+    }
+  })
 
   const addTodo = () => {
-    if (title === "" || text === "") {
+    if (title === "" || content === "") {
       return;
     }
 
-    setTodos((prev) => [...prev, { id: id + 1, title: title, task: text }]);
-    setId(id + 1);
+    postTodoMutation({ title, content });
+
     setTitle("");
-    setText("");
+    setContent("");
   };
 
-  const deleteTodo = (id) => {
-    setTodos((prev) => prev.filter((item) => item.id !== id));
-  };
+  const updateTodo = (id, title, content) => {
+    if (editTitle === "" && editContent === "") {
+      setEditingId(null);
+      return;
+    }
 
-  const deleteTodoList = () => {
-    setTodos([]);
-  };
+    patchTodoMutation({
+      id,
+      title: editTitle ? editTitle : title,
+      content: editContent ? editContent : content
+    });
 
-  const updateTodo = (id, title, text) => {
-    setTodos((prev) =>
-      prev.map((item) => (item.id === id ? {
-          ...item,
-          title: editTitle === "" ? title : editTitle,
-          task: editText === "" ? text : editText
-        }
-        : item))
-    );
-    setEditingId(null);
     setEditTitle("");
-    setEditText("");
-  };
-
-  console.log(todos);
+    setEditContent("");
+    setEditingId(null);
+  }
 
   return (
     <Container>
+      <h1>ToDo 검색</h1>
+      <TodoInput
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+
       <TodoInputContainer>
         <TodoInput
           value={title}
@@ -64,55 +93,70 @@ function App() {
           placeholder="제목을 입력해주세요"
         />
         <TodoInput
-          value={text}
-          onChange={(e) => setText(e.target.value)}
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
           placeholder="내용을 입력해주세요"
         />
         <TodoButton onClick={addTodo} />
       </TodoInputContainer>
 
       <TodoListContainer>
-        <button onClick={deleteTodoList}>전체 삭제하기</button>
-        {todos.map((todo) => (
+        {isPending ? (
+          <div>로딩중...</div>
+        ) : (
+          todos[0]?.map((todo) => (
           <div key={todo.id}>
             {editingId === todo.id ? (
               <TodoContainer>
-                <input type="checkbox"/>
+                <input type="checkbox" defaultChecked={todo.checked}/>
                 <TextContainer>
                   <TodoInput
                     defaultValue={todo.title}
                     onChange={(e) => setEditTitle(e.target.value)}
                   />
                   <TodoInput
-                    defaultValue={todo.task}
-                    onChange={(e) => setEditText(e.target.value)}
+                    defaultValue={todo.content}
+                    onChange={(e) => setEditContent(e.target.value)}
                   />
                 </TextContainer>
                 <ButtonContainer>
                   <UpdateButton
-                    onClick={() => updateTodo(todo.id, todo.title, todo.task)}
+                    onClick={() => updateTodo(
+                      todo.id,
+                      todo.title,
+                      todo.content
+                    )}
                     buttonText="수정 완료"
                   />
                 </ButtonContainer>
               </TodoContainer>
             ) : (
               <TodoContainer>
-                <input type="checkbox"/>
+                <input
+                  type="checkbox"
+                  defaultChecked={todo.checked}
+                  onChange={(e) => patchTodoMutation({
+                    id: todo.id,
+                    checked: !todo.checked
+                  })}
+                />
                 <TextContainer>
                   <Title>{todo.title}</Title>
-                  <Task>{todo.task}</Task>
+                  <Content>{todo.content}</Content>
                 </TextContainer>
                 <ButtonContainer>
                   <UpdateButton
                     onClick={() => setEditingId(todo.id)}
                     buttonText="수정"
                   />
-                  <DeleteButton onClick={() => deleteTodo(todo.id)}/>
+                  <DeleteButton
+                    onClick={() => deleteTodoMutation({ id: todo.id })}
+                  />
                 </ButtonContainer>
               </TodoContainer>
             )}
           </div>
-        ))}
+          )))}
       </TodoListContainer>
     </Container>
   );
@@ -158,7 +202,7 @@ const Title = styled.div`
   font-weight: bold;
 `
 
-const Task = styled.div`
+const Content = styled.div`
 
 `
 
