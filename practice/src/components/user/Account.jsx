@@ -29,6 +29,7 @@ const AuthForm = (props) => {
       if (getAccessToken) setIsLogin(true);
 
       navigate(`/${link}`);
+      window.location.reload();
     } catch (e) {
       console.log(e);
     }

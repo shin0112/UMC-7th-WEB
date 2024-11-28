@@ -1,5 +1,5 @@
-import { Login } from "@/components/user/Account";
 import * as yup from "yup";
+import { Login } from "../components/user/Account.jsx";
 
 const LoginPage = () => {
   const schema = yup.object().shape({

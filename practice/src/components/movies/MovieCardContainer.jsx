@@ -8,7 +8,7 @@ import SkeletonCardList from "../card/SkeletonList";
 export const MovieContainer = ({ movies }) => {
   return (
     <S.MovieContainer>
-      {movies.data?.results.map((movie) => (
+      {movies?.results.map((movie) => (
         <MovieCard key={movie.id} movie={movie} />
       ))}
     </S.MovieContainer>
@@ -27,12 +27,14 @@ export const SearchMovieCardContainer = () => {
     isError,
   } = useMovieFetch(`/search/movie?query=${mq}&language=ko-KR`);
 
-  if (isLoading) return <SkeletonCardList number={20} />;
+  if (mq && isLoading) {
+    return <SkeletonCardList number={20}/>;
+  }
   if (isError) return <Error />;
 
   if (mq && movies.data?.results.length === 0) {
     return <S.Text>검색어 {mq}에 해당하는 데이터가 없습니다.</S.Text>;
   }
 
-  return <MovieContainer movies={movies} />;
+  return <MovieContainer movies={movies.data}/>;
 };

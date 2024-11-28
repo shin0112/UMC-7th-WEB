@@ -5,7 +5,7 @@ const SkeletonCardList = ({ number }) => {
   return (
     <S.MovieContainer>
       {new Array(number).fill(0).map((_, idx) => (
-        <SkeletonCard />
+        <SkeletonCard key={idx}/>
       ))}
     </S.MovieContainer>
   );
